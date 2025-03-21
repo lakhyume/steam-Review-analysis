@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <title>Zegva - Responsive Admin & Dashboard Template | Themesdesign</title>
+    <meta content="Responsive admin theme build on top of Bootstrap 4" name="description">
+
+    <link href="/static/css/bootstrap-datepicker.min.css" rel="stylesheet">
+
+    <!--Morris Chart CSS -->
+    <link rel="stylesheet" href="/static/css/morris.css">
+
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/metismenu.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/icons.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/style.css" rel="stylesheet" type="text/css">
+
+</head>
+<style>
+    th {
+        width: auto; /* 让表头单元格根据内容自动调整宽度 */
+    }
+
+    table {
+        width: 100%; /* 表格宽度占据父容器 */
+        border-collapse: collapse; /* 合并表格边框 */
+        text-align: center; /* 表格内所有内容居中对齐 */
+    }
+
+    th, td {
+        padding: 8px; /* 设置单元格内边距 */
+        border: 1px solid #ddd; /* 设置单元格边框 */
+    }
+</style>
+<body>
+
+<div class="header-bg">
+    <!-- Navigation Bar-->
+    <header id="topnav">
+        <div class="topbar-main">
+            <div class="container-fluid">
+
+                <!-- Logo-->
+                <div>
+                    <a href="" class="logo">
+                        <img src="/static/picture/logo-dark.png" class="logo-lg" alt="" height="22">
+                    </a>
+                </div>
+                <!-- End Logo-->
+
+                <div class="menu-extras topbar-custom navbar p-0">
+
+                    <!-- Search input -->
+                    <div class="search-wrap" id="search-wrap">
+                        <div class="search-bar">
+                            <input class="search-input" type="search" placeholder="Search">
+                            <a href="#" class="close-search toggle-search" data-target="#search-wrap">
+                                <i class="mdi mdi-close-circle"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <ul class="navbar-right ml-auto list-inline float-right mb-0">
+
+                        <li class="dropdown notification-list list-inline-item">
+                            <div class="dropdown notification-list nav-pro-img">
+                                <a class="dropdown-toggle nav-link arrow-none waves-effect nav-user"
+                                   data-toggle="dropdown" href="#" role="button" aria-haspopup="false"
+                                   aria-expanded="false">
+                                    用户名: {{ username }}
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-animated profile-dropdown">
+
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item text-danger" href="/loginout"><i
+                                            class="mdi mdi-power text-danger"></i> 退出登陆</a>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="menu-item dropdown notification-list list-inline-item">
+                            <!-- Mobile menu toggle-->
+                            <a class="navbar-toggle nav-link">
+                                <div class="lines">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </a>
+                            <!-- End mobile menu toggle-->
+                        </li>
+
+                    </ul>
+
+                </div>
+                <!-- end menu-extras -->
+
+                <div class="clearfix"></div>
+
+            </div>
+            <!-- end container -->
+        </div>
+        <!-- end topbar-main -->
+
+        <!-- start content -->
+        <div class="bg-dark">
+            <div class="container-fluid">
+                <div class="row align-items-center ">
+                    <div class="col-md-8">
+                        <div class="page-title-box">
+                            <h4 class="page-title">游戏数据分析可视化</h4>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active">主页</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="float-right d-none d-md-block app-datepicker">
+                            <input type="text" class="form-control" data-date-format="MM dd, yyyy" readonly="readonly"
+                                   id="datepicker">
+                            <i class="mdi mdi-chevron-down mdi-drop"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row top-content">
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="row align-items-center p-1">
+                            <div class="col-lg-6">
+                                <h5 class="font-16 text-white">最多游戏类型</h5>
+                                <h4 class="text-info pt-1 mb-0">{{ typeSort }}</h4>
+                            </div>
+                            <div class="col-lg-6">
+                                <div id="chart1"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="row align-items-center p-1">
+                            <div class="col-lg-6">
+                                <h5 class="font-16 text-white">最多折扣游戏</h5>
+                                <h4 class="text-warning pt-1 mb-0" style="font-size: 22px">{{ minDiscountTitle }}</h4>
+                            </div>
+                            <div class="col-lg-6">
+                                <div id="chart2"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="row align-items-center p-1">
+                            <div class="col-lg-6">
+                                <h5 class="font-16 text-white">用户个数</h5>
+                                <h4 class="text-primary pt-1 mb-0">{{ maxUserLen }}</h4>
+                            </div>
+                            <div class="col-lg-6">
+                                <div id="chart3"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-xl-3">
+
+                        <div class="row align-items-center p-1">
+                            <div class="col-lg-6">
+                                <h5 class="font-16 text-white">数据量</h5>
+                                <h4 class="text-danger pt-1 mb-0">{{ maxGames }}</h4>
+                            </div>
+                            <div class="col-lg-6">
+                                <div id="chart4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end content -->
+
+        <!-- MENU Start -->
+        <div class="navbar-custom">
+            <div class="container-fluid">
+
+                <div id="navigation">
+
+                    <!-- Navigation Menu-->
+                    <ul class="navigation-menu">
+
+                        <li class="has-submenu">
+                            <a href="/home"><i class="dripicons-meter"></i> 首页</a>
+                        </li>
+
+                        <li class="has-submenu">
+                            <a href="/tableData"><i class="dripicons-briefcase"></i> 数据表格</a>
+                        </li>
+
+                        <li class="has-submenu">
+                            <a href="/search"><i class="dripicons-broadcast"></i> 游戏搜索</a>
+                        </li>
+
+                        <li class="has-submenu">
+                            <a href="#"><i class="dripicons-view-thumb"></i> 数据分析</a>
+                            <ul class="submenu">
+                                <li>
+                                    <a href="#">价格分析</a>
+                                </li>
+
+                                <li>
+                                    <a href="/typeChar">类型相关性分析</a>
+                                </li>
+
+                                <li>
+                                    <a href="/rateChar">评分分析</a>
+                                </li>
+                                <li>
+                                    <a href="/firmChar">出厂商、发行商分析</a>
+                                </li>
+
+                                <li>
+                                    <a href="/anotherChar">操作系统分析</a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+                        <li class="has-submenu">
+                            <a href="#"><i class="dripicons-graph-bar"></i>词云图 </a>
+                            <ul class="submenu">
+                                <li><a href="/titleCloud">游戏名词云图</a></li>
+                                <li><a href="/summaryCloud">简介词云图</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="has-submenu">
+                            <a href="/recommendation"><i class="dripicons-to-do"></i> 游戏推荐</a>
+                        </li>
+
+                    </ul>
+                    <!-- End navigation menu -->
+                </div>
+                <!-- end #navigation -->
+            </div>
+            <!-- end container -->
+        </div>
+        <!-- end navbar-custom -->
+    </header>
+    <!-- End Navigation Bar-->
+
+</div>
+<!-- header-bg -->
+
+<div class="wrapper">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-xl-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title mb-4">游戏上线时间个数</h4>
+                        <div id="firstMian" style="width: 100%;height: 450px;"></div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title mb-4">近期上市游戏</h4>
+                        <div class="activity">
+                            {% for i in gamesTimeSort %}
+                                <div class="activity-item d-flex" style="margin-bottom:5px">
+                                    <a href="{{ i[-1] }}">
+                                        <img style="width:100px;height:45px" src="{{ i[2] }}" alt="">
+                                    </a>
+                                    <div class="activite-label"
+                                         style="width: 220px;margin-left:5px;display:flex;padding-top:12px">{{ i[1] }}
+                                    </div>
+                                    <i style="padding-top: 12px"
+                                       class='bi bi-circle-fill activity-badge text-danger align-self-start'>
+                                    </i>
+                                    <div style="padding-top:12px;margin-left:8px">
+                                        价格：<a href="#" class="fw-bold text-dark">{{ i[8] }}元</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title mb-4">近期游戏报表</h4>
+                        <div class="col-sm-12">
+                            <table id="datatable"
+                                   class="table table-bordered dt-responsive nowrap dataTable no-footer dtr-inline"
+                                   style="border-collapse: collapse; border-spacing: 0px; width: 100%;" role="grid"
+                                   aria-describedby="datatable_info">
+
+                                <colgroup>
+                                    <col>
+                                    <col>
+                                    <col style="width: 100px">
+                                    <col>
+                                    <col>
+                                    <col style="width: 100px">
+                                    <col style="width: 100px">
+                                </colgroup>
+
+                                <thead>
+                                <tr role="row">
+                                    {#                                    <th class="sorting_asc" tabindex="0" aria-controls="datatable" rowspan="1"#}
+                                    {#                                        colspan="1" aria-sort="ascending"#}
+                                    {#                                        aria-label="Name: activate to sort column descending">##}
+                                    {#                                    </th>#}
+                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1"
+                                        aria-label="Position: activate to sort column ascending">游戏名
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1"
+                                        aria-label="Office: activate to sort column ascending">图标
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1"
+                                        aria-label="Age: activate to sort column ascending">上市时间
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1"
+                                        aria-label="Start date: activate to sort column ascending">折扣价
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1"
+                                        aria-label="Salary: activate to sort column ascending">类型
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1"
+                                        aria-label="Salary: activate to sort column ascending">近期评价
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1"
+                                        aria-label="Salary: activate to sort column ascending">整体评价
+                                    </th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                {% for i in gamesListData %}
+                                    <tr>
+                                        {#                                        <th scope="row"><a href="#">#{{ i[0] }}</a></th>#}
+                                        <td>{{ i[1] }}</td>
+                                        <td><a href="{{ i[-1] }}" class="text-primary"><img src="{{ i[2] }}" alt=""></a>
+                                        </td>
+                                        <td>{{ i[3] }}</td>
+                                        <td><span class="badge bg-success">{{ i[8] }}元</span></td>
+                                        <td>
+                                            {#                                            {% for j in i[9] %}#}
+                                            {#                                                {{ j }}、#}
+                                            {#                                            {% endfor %}#}
+                                            {% set combined_text = i[9]|join(' 、 ') %}
+                                            <span>{{ combined_text.replace(' ', '') }}</span> <!-- 显示前30个字符 -->
+                                        </td>
+                                        <td>
+                                            {% if i[11] == '一般' %}
+                                                <a href="{{ i[-1] }}" class="text-danger">
+                                                    {{ i[11] }}
+                                                </a>
+                                            {% else %}
+                                                <a href="{{ i[-1] }}" class="text-primary">
+                                                    {{ i[11] }}
+                                                </a>
+                                            {% endif %}
+                                        </td>
+
+                                        <td>
+                                            {% if i[12] == '一般' %}
+                                                <a href="{{ i[-1] }}" class="text-danger">
+                                                    {{ i[12] }}
+                                                </a>
+                                            {% else %}
+                                                <a href="{{ i[-1] }}" class="text-primary">
+                                                    {{ i[12] }}
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title mb-4">用户个数占比</h4>
+                        <div id="secondMain" style="height: 400px"></div>
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mt-0 header-title mb-4">游戏类型占比</h4>
+                        <div id="thirdMain" style="height: 400px"></div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+    <!-- end container-fluid -->
+</div>
+<!-- end wrapper -->
+
+<!-- Footer -->
+<footer class="footer">
+    <a href="">2024 steam游戏数据分析可视化</a>
+</footer>
+
+<!-- End Footer -->
+
+<!-- jQuery  -->
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.bundle.min.js"></script>
+<script src="/static/js/jquery.slimscroll.js"></script>
+<script src="/static/js/waves.min.js"></script>
+
+<!-- Plugins js -->
+<script src="/static/js/apexcharts.min.js"></script>
+<script src="/static/js/bootstrap-datepicker.min.js"></script>
+
+<!--Morris Chart-->
+{#<script src="/static/js/morris.min.js"></script>#}
+<script src="/static/js/raphael.min.js"></script>
+
+{#<script src="/static/js/dashboard.init.js"></script>#}
+
+<!-- App js -->
+<script src="/static/js/app.js"></script>
+
+<!-- echarts可视化 js -->
+<script src="/static/js/echarts.js"></script>
+
+<!-- 表格 js -->
+<script src="/static/js/jquery.dataTables.min.js"></script>
+<script src="/static/js/dataTables.bootstrap4.min.js"></script>
+<!-- Datatable init js -->
+<script src="/static/js/datatables.init.js"></script>
+
+
+<script>
+    var chartDom = document.getElementById('firstMian');
+    var myChart = echarts.init(chartDom);
+    var option;
+
+    option = {
+        legend: {},
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross',
+                crossStyle: {
+                    color: '#fff'
+                }
+            }
+        },
+        xAxis: {
+            type: 'category',
+            data: {{ xData | tojson }},
+            axisLabel: {
+                color: '#000'
+            },
+            axisLine: {
+                show: true
+            },
+            axisTick: {
+                show: false
+            },
+            splitArea: {
+                show: true
+            }
+        },
+        yAxis: {
+            type: 'value',
+            axisLine: {
+                show: true,
+                lineStyle: {
+                    color: 'green',
+                    width: 1
+                }
+            },
+            axisTick: {
+                show: true,
+                length: 3,
+                lineStyle: {
+                    width: 1,
+                    type: 'olid'
+                }
+            },
+        },
+        dataZoom: [
+            {
+                show: true,
+                start: 0,
+                end: 90
+            },
+            {
+                type: 'inside',
+                start: 94,
+                end: 100
+            }
+        ],
+        series: [
+            {
+                name: '上市个数',
+                type: 'bar',
+                data: {{ yData | tojson }},
+                label: {  // 在柱子上显示数值
+                    show: true,
+                    position: 'top'  // 数值显示在柱子顶部，您也可以根据需要修改为 'inside' 等位置
+                },
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(
+                        0, 0, 0, 1,
+                        [
+                            {offset: 0, color: '#E27BF6'},
+                            {offset: 0.5, color: '#D575F2'},
+                            {offset: 1, color: '#D14CFB'}
+                        ]
+                    )
+                }
+            }
+        ]
+    };
+
+    myChart.setOption(option);
+</script>
+
+<script>
+    var chartDom = document.getElementById('secondMain');
+    var myChart = echarts.init(chartDom);
+    var option;
+
+    option = {
+        title: {
+            text: '用户创建时间占比',
+            subtext: '用户创建时间Createtime',
+            left: 'center',
+            top: '12%'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left'
+        },
+        series: [
+            {
+                name: '用户个数',
+                type: 'pie',
+                radius: '50%',
+                data: {{ userData | tojson }},
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+
+    option && myChart.setOption(option);
+
+</script>
+
+
+<script>
+    var chartDom = document.getElementById('thirdMain');
+    var myChart = echarts.init(chartDom);
+    var option;
+
+    option = {
+        title: {
+            text: '游戏类型占比',
+            subtext: '数据来源steam',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            type: 'scroll',  // 设置为可滚动
+            orient: 'vertical',
+            left: 'left'
+        },
+        series: [
+            {
+                name: '游戏类型',
+                type: 'pie',
+                radius: '50%',
+                data: {{ typeData | tojson }},
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+
+    option && myChart.setOption(option);
+
+</script>
+
+
+</body>
+
+</html>
